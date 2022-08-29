@@ -18,4 +18,7 @@ public class MorningTemplateParameter {
     private String cityCode;
 
     private String constellation;
+
+    private String constellationAll;
+
 }

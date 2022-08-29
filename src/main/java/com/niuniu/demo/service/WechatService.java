@@ -274,7 +274,7 @@ public class WechatService {
         templateMessage.addData(new WxMpTemplateData("dayWeather", weather.getOrDefault("dayweather", "风云大变").toString(), COLOR_LIST.get(random.nextInt(COLOR_LIST.size()))));
         templateMessage.addData(new WxMpTemplateData("daytemp", weather.getOrDefault("daytemp", "105").toString() + "℃", COLOR_LIST.get(random.nextInt(COLOR_LIST.size()))));
        // templateMessage.addData(new WxMpTemplateData("color", constellation.getOrDefault("color", "透明色").toString(), COLOR_LIST.get(random.nextInt(COLOR_LIST.size()))));
-       // templateMessage.addData(new WxMpTemplateData("constellationName", constellation.getOrDefault("name", "xx星球").toString(), COLOR_LIST.get(random.nextInt(COLOR_LIST.size()))));
+        templateMessage.addData(new WxMpTemplateData("constellationName", morningTemplateParameter.getConstellationAll(), COLOR_LIST.get(random.nextInt(COLOR_LIST.size()))));
         templateMessage.addData(new WxMpTemplateData("love", constellation.get("love").toString(), COLOR_LIST.get(random.nextInt(COLOR_LIST.size()))));
        // templateMessage.addData(new WxMpTemplateData("friend", friend.equals(personalInfo.getConstellation()) ? friend : friend + "（竟然不是我", COLOR_LIST.get(random.nextInt(COLOR_LIST.size()))));
         templateMessage.addData(new WxMpTemplateData("summary", constellation.get("summary"), COLOR_LIST.get(random.nextInt(COLOR_LIST.size()))));
