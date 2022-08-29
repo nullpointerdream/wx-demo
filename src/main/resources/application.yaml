@@ -28,10 +28,10 @@ wechat:
             title: 早上好呀呀鸭
             #你们的相遇时间
             meetDate: '1996-06-18'
-            city: 广州
+            city: 成都
             #居住地点，高德地图api下载查询 https://lbs.amap.com/api/webservice/download
-            cityCode: 440100
-            constellation: 双子座
+            cityCode: 510107
+            constellation: chunvzuo
           #用户openID，多用户可以按照格式继续添加下去
           填写你的需要特定配置的微信用户号:
             title: 早上好呀呀鸭
@@ -50,7 +50,7 @@ wechat:
 #发送者个人信息
 personal:
   info:
-    constellation: 双子座
+    constellation: 天秤座
 
 lbs:
   key: cd4de71007d59924ee713a70ef9adf5f

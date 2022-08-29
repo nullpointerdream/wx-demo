@@ -15,6 +15,9 @@ import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.result.WxMpUserList;
 import me.chanjar.weixin.mp.bean.template.WxMpTemplateData;
 import me.chanjar.weixin.mp.bean.template.WxMpTemplateMessage;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -22,14 +25,12 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
 import java.net.URLEncoder;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 /**
  * @author lzj
@@ -165,7 +166,7 @@ public class WechatService {
                 //早上问好
                 sendWechatMessage(openId, "morningTemplate");
                 //颜文字
-                sendWechatMessage(openId, "emoticonsTemplate");
+               // sendWechatMessage(openId, "emoticonsTemplate");
             }
         } catch (WxErrorException e) {
             throw new RuntimeException(e);
@@ -262,11 +263,8 @@ public class WechatService {
         String[] split = HAPPY_STATE.split("、");
         String state = split[random.nextInt(split.length)];
         //星座
-        JSONObject constellation = getConstellation(morningTemplateParameter.getConstellation());
-        //速配星座
-        String friend = constellation.getOrDefault("QFriend", "双子座").toString();
-        //今天预测
-        String summary = constellation.getOrDefault("summary", "桃花运有点猛").toString();
+        Map<String,String> constellation = getConstellation(morningTemplateParameter.getConstellation());
+       //今天预测
 
         templateMessage.addData(new WxMpTemplateData("title", morningTemplateParameter.getTitle(), COLOR_LIST.get(random.nextInt(COLOR_LIST.size()))));
         templateMessage.addData(new WxMpTemplateData("time", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), COLOR_LIST.get(random.nextInt(COLOR_LIST.size()))));
@@ -275,13 +273,13 @@ public class WechatService {
         templateMessage.addData(new WxMpTemplateData("city", morningTemplateParameter.getCity(), COLOR_LIST.get(random.nextInt(COLOR_LIST.size()))));
         templateMessage.addData(new WxMpTemplateData("dayWeather", weather.getOrDefault("dayweather", "风云大变").toString(), COLOR_LIST.get(random.nextInt(COLOR_LIST.size()))));
         templateMessage.addData(new WxMpTemplateData("daytemp", weather.getOrDefault("daytemp", "105").toString() + "℃", COLOR_LIST.get(random.nextInt(COLOR_LIST.size()))));
-        templateMessage.addData(new WxMpTemplateData("color", constellation.getOrDefault("color", "透明色").toString(), COLOR_LIST.get(random.nextInt(COLOR_LIST.size()))));
-        templateMessage.addData(new WxMpTemplateData("constellationName", constellation.getOrDefault("name", "xx星球").toString(), COLOR_LIST.get(random.nextInt(COLOR_LIST.size()))));
-        templateMessage.addData(new WxMpTemplateData("love", constellation.getOrDefault("love", random.nextInt(100)).toString(), COLOR_LIST.get(random.nextInt(COLOR_LIST.size()))));
-        templateMessage.addData(new WxMpTemplateData("friend", friend.equals(personalInfo.getConstellation()) ? friend : friend + "（竟然不是我", COLOR_LIST.get(random.nextInt(COLOR_LIST.size()))));
-        templateMessage.addData(new WxMpTemplateData("summary", summary, COLOR_LIST.get(random.nextInt(COLOR_LIST.size()))));
+       // templateMessage.addData(new WxMpTemplateData("color", constellation.getOrDefault("color", "透明色").toString(), COLOR_LIST.get(random.nextInt(COLOR_LIST.size()))));
+       // templateMessage.addData(new WxMpTemplateData("constellationName", constellation.getOrDefault("name", "xx星球").toString(), COLOR_LIST.get(random.nextInt(COLOR_LIST.size()))));
+        templateMessage.addData(new WxMpTemplateData("love", constellation.get("love").toString(), COLOR_LIST.get(random.nextInt(COLOR_LIST.size()))));
+       // templateMessage.addData(new WxMpTemplateData("friend", friend.equals(personalInfo.getConstellation()) ? friend : friend + "（竟然不是我", COLOR_LIST.get(random.nextInt(COLOR_LIST.size()))));
+        templateMessage.addData(new WxMpTemplateData("summary", constellation.get("summary"), COLOR_LIST.get(random.nextInt(COLOR_LIST.size()))));
         //太长拆分下一个发送
-        if (summary.length() + chp.length() + du.length() > 130 && StrUtil.isNotEmpty(wechatConfigProperties.getSingleTemplateId())) {
+        if (constellation.get("summary").length() + chp.length() + du.length() > 130 && StrUtil.isNotEmpty(wechatConfigProperties.getSingleTemplateId())) {
             templateMessage.addData(new WxMpTemplateData("chp", "⬇⬇", COLOR_LIST.get(random.nextInt(COLOR_LIST.size()))));
             templateMessage.addData(new WxMpTemplateData("du", "⬇⬇", COLOR_LIST.get(random.nextInt(COLOR_LIST.size()))));
             sendMessage(templateMessage);
@@ -306,16 +304,35 @@ public class WechatService {
      * @param name
      * @return
      */
-    private JSONObject getConstellation(String name) {
+    private static Map<String,String> getConstellation(String name) {
         try {
-            String url = "http://web.juhe.cn/constellation/getAll?consName=" + URLEncoder.encode(name, "UTF-8") + "&type=today&key=" + constellationKey;
-            String s = HttpUtil.get(url);
-            return JSON.parseObject(s);
+            String url = "https://www.xingzuo.com/xingzuoyunshi/"+name;
+            Document listdocument = Jsoup.connect(url).get();
+            Map<String,String> map = new HashMap<>();
+            Elements yscontent = listdocument.getElementsByClass("yscontent");
+            yscontent.select("p").forEach(bean->{
+                String p1 = bean.getElementsByClass("p1").text();
+                String span = bean.select("span").text();
+                if("爱情运势".equals(p1)){
+                    map.put("love",span);
+                }else if("综合运势".equals(p1)){
+                    map.put("summary",span);
+                }
+
+            });
+            return map;
         } catch (Exception e) {
             log.error("获取星座失败", e);
-            return new JSONObject();
         }
+        return new HashMap<>();
     }
+
+    public static void main(String[] args) {
+        Map<String, String> chunvzuo = getConstellation("chunvzuo");
+        System.out.println(chunvzuo);
+    }
+
+
 
     /**
      * 获取天气
