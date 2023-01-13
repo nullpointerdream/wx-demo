@@ -11,12 +11,12 @@ wechat:
     appSecret: e5e1efdab8a6c9bcc43eeaf24b3b4141
     token: eureka
     #配置一个文字的模板ID
-    singleTemplateId: IeXjAWST8j2FhFEVEDXRHxdlOBLp1gNRVTRcn_3V0nc
+    singleTemplateId: tvdalHD9IwkNGIAXH7sBJMED3-bkDcNtR5YpldswUOU
     template:
       #早安模板
       morningTemplate:
         #模板ID
-        templateId: -1MrlcGGcwTZM3tGcZSZ-QjV9Ez4tlo9Ybj7pRwEvwE
+        templateId: 3-bH0eIn8X6m2LqMiIZKhmY0F5mchUbLhocSUMtXXUg
         #是否关注的用户全发送，ture为是，当值为ture时，sendOpenId 为排除发送对象的微信用户，当值为false为否，sendOpenId为发送对象的微信用户
         allSend: true
         filterOpenIds:
@@ -25,14 +25,14 @@ wechat:
           #这是默认的设置，如果有用户没设置参数，就按此参数
           default:
             #早安话语
-            title: 早上好呀呀鸭
+            title: 今天也是元气满满的一天
             #你们的相遇时间
-            meetDate: '1996-06-18'
+            meetDate: '2023-01-07'
             city: 成都
             #居住地点，高德地图api下载查询 https://lbs.amap.com/api/webservice/download
             cityCode: 510107
             constellation: chunvzuo
-            constellationAll: 狮子处女综合体
+            constellationAll: 狮子座
           #用户openID，多用户可以按照格式继续添加下去
           填写你的需要特定配置的微信用户号:
             title: 早上好呀呀鸭
