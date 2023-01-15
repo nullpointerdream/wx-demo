@@ -254,7 +254,7 @@ public class WechatService {
         MorningTemplateParameter morningTemplateParameter = JSON.parseObject(JSON.toJSONString(baseTemplateParameter), MorningTemplateParameter.class);
         LocalDate meetDate = LocalDate.parse(morningTemplateParameter.getMeetDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         //天气
-        JSONObject weather = getWeather(morningTemplateParameter.getCityCode());
+        String weather = getWeather(morningTemplateParameter.getCityCode());
         //彩虹屁
         String chp = getChp();
         //毒鸡汤
@@ -271,9 +271,7 @@ public class WechatService {
         templateMessage.addData(new WxMpTemplateData("day", LocalDate.now().toEpochDay() - meetDate.toEpochDay() + 1 + "", COLOR_LIST.get(random.nextInt(COLOR_LIST.size()))));
         templateMessage.addData(new WxMpTemplateData("state", state, COLOR_LIST.get(random.nextInt(COLOR_LIST.size()))));
         templateMessage.addData(new WxMpTemplateData("city", morningTemplateParameter.getCity(), COLOR_LIST.get(random.nextInt(COLOR_LIST.size()))));
-        templateMessage.addData(new WxMpTemplateData("dayWeather", weather.getOrDefault("dayweather", "风云大变").toString(), COLOR_LIST.get(random.nextInt(COLOR_LIST.size()))));
-        templateMessage.addData(new WxMpTemplateData("daytemp", weather.getOrDefault("daytemp", "105").toString() + "℃", COLOR_LIST.get(random.nextInt(COLOR_LIST.size()))));
-       // templateMessage.addData(new WxMpTemplateData("color", constellation.getOrDefault("color", "透明色").toString(), COLOR_LIST.get(random.nextInt(COLOR_LIST.size()))));
+        templateMessage.addData(new WxMpTemplateData("dayWeather", weather, COLOR_LIST.get(random.nextInt(COLOR_LIST.size()))));
         templateMessage.addData(new WxMpTemplateData("constellationName", morningTemplateParameter.getConstellationAll(), COLOR_LIST.get(random.nextInt(COLOR_LIST.size()))));
         templateMessage.addData(new WxMpTemplateData("love", constellation.get("love").toString(), COLOR_LIST.get(random.nextInt(COLOR_LIST.size()))));
        // templateMessage.addData(new WxMpTemplateData("friend", friend.equals(personalInfo.getConstellation()) ? friend : friend + "（竟然不是我", COLOR_LIST.get(random.nextInt(COLOR_LIST.size()))));
@@ -328,8 +326,7 @@ public class WechatService {
     }
 
     public static void main(String[] args) {
-        Map<String, String> chunvzuo = getConstellation("chunvzuo");
-        System.out.println(chunvzuo);
+        new WechatService().getWeather("");
     }
 
 
@@ -340,8 +337,17 @@ public class WechatService {
      * @param city
      * @return
      */
-    private JSONObject getWeather(String city) {
+    private String getWeather(String city) {
         try {
+            String url = "https://www.tianqi.com/chengdu/15/";
+            Document listdocument = Jsoup.connect(url).get();
+            String text = listdocument.select("div.weaone_ba").text();
+            return text;
+        }catch (Exception e){
+            log.error("获取天气失败", e);
+        }
+        return "今日天气：成都市 风云大变";
+        /*try {
             String url = "https://restapi.amap.com/v3/weather/weatherInfo?key=" + lbsKey + "&city=" + city + "&extensions=all";
             ResponseEntity<Object> forEntity = REST_TEMPLATE.getForEntity(url, Object.class);
             JSONObject jsonObject = JSON.parseObject(JSON.toJSONString(forEntity.getBody()));
@@ -350,7 +356,7 @@ public class WechatService {
         } catch (Exception e) {
             log.error("获取天气失败", e);
             return new JSONObject();
-        }
+        }*/
     }
 
     /**

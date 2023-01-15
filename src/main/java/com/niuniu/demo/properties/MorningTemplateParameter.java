@@ -21,4 +21,8 @@ public class MorningTemplateParameter {
 
     private String constellationAll;
 
+    private String baby;
+
+    private String birthday;
+
 }

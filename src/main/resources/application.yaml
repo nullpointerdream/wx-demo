@@ -11,16 +11,16 @@ wechat:
     appSecret: e5e1efdab8a6c9bcc43eeaf24b3b4141
     token: eureka
     #配置一个文字的模板ID
-    singleTemplateId: tvdalHD9IwkNGIAXH7sBJMED3-bkDcNtR5YpldswUOU
+    singleTemplateId: VwlTWH3mCm7G9uDqmHUWUGnhoiJktTNJ_ZIRn_eFB2U
     template:
       #早安模板
       morningTemplate:
         #模板ID
-        templateId: 3-bH0eIn8X6m2LqMiIZKhmY0F5mchUbLhocSUMtXXUg
+        templateId: g7i3TYc2Frybi8Y4yL0SDaf5b0tT75d1WPLM_dH1ACA
         #是否关注的用户全发送，ture为是，当值为ture时，sendOpenId 为排除发送对象的微信用户，当值为false为否，sendOpenId为发送对象的微信用户
         allSend: true
         filterOpenIds:
-#          - oK0U562Y5ijqYRpGUtNRs0vxxxWU
+        #          - oK0U562Y5ijqYRpGUtNRs0vxxxWU
         parameter:
           #这是默认的设置，如果有用户没设置参数，就按此参数
           default:
@@ -33,6 +33,8 @@ wechat:
             cityCode: 510107
             constellation: chunvzuo
             constellationAll: 狮子座
+            baby: 小雷
+            birthday: 06-13
           #用户openID，多用户可以按照格式继续添加下去
           填写你的需要特定配置的微信用户号:
             title: 早上好呀呀鸭
