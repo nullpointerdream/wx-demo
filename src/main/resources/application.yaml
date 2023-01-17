@@ -16,11 +16,11 @@ wechat:
       #早安模板
       morningTemplate:
         #模板ID
-        templateId: g7i3TYc2Frybi8Y4yL0SDaf5b0tT75d1WPLM_dH1ACA
+        templateId: rftsfxJnu-tCUKDA1wC8_b3i5uzKr8aIvVUPT_V-jQw
         #是否关注的用户全发送，ture为是，当值为ture时，sendOpenId 为排除发送对象的微信用户，当值为false为否，sendOpenId为发送对象的微信用户
         allSend: true
         filterOpenIds:
-        #          - oK0U562Y5ijqYRpGUtNRs0vxxxWU
+ #           - opFQ56_UaNxG8isl_ys3cHTQNd9E
         parameter:
           #这是默认的设置，如果有用户没设置参数，就按此参数
           default:

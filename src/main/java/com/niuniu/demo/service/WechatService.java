@@ -46,7 +46,7 @@ public class WechatService {
     private static final List<String> COLOR_LIST = new ArrayList<>();
     private static final RestTemplate REST_TEMPLATE = new RestTemplate();
 
-    private static final String HAPPY_STATE = "欢快、含笑九泉、喜上眉梢、喜气洋洋、欢天喜地、乐不思蜀、喜笑颜开、兴高采烈、兴致大发、笑容满面、精神抖擞、满面春风、笑逐颜开、心花怒放、情绪高涨、欢欣雀跃、风光无限、春心荡漾、巧笑嫣然、上蹿下跳、怦然心动、激动不已、激情四射、情绪高涨、乐开怀、红红火火、笑容可掬、乐开怀、高高兴兴、意气风发、" +
+    private static final String HAPPY_STATE = "欢快、喜上眉梢、喜气洋洋、欢天喜地、乐不思蜀、喜笑颜开、兴高采烈、兴致大发、笑容满面、精神抖擞、满面春风、笑逐颜开、心花怒放、情绪高涨、欢欣雀跃、风光无限、春心荡漾、巧笑嫣然、上蹿下跳、怦然心动、激动不已、激情四射、情绪高涨、乐开怀、红红火火、笑容可掬、乐开怀、高高兴兴、意气风发、" +
             "欢喜、喜悦、夷愉、愉快、开心、快乐、欢乐、乐意、首肯、愿意、忻悦、欣忭、欣喜、快活、夷悦、怡悦、雀跃、兴奋、欢腾、欢跃、欢欣、欢畅、欢娱、得意、痛快、康乐、安乐、得志、畅快、舒畅、称心、满足、满意欢娱、欢天喜地、乐不可支、兴趣盎然、兴致勃勃、喜形于色" +
             "乐悠悠、甜滋滋、乐滋滋、乐悠悠、笑嘻嘻、笑眯眯、笑哈哈、喜洋洋、喜滋滋、兴冲冲、乐融融、乐陶陶、乐呵呵";
 
@@ -158,7 +158,7 @@ public class WechatService {
     private PersonalInfo personalInfo;
 
 
-    @Scheduled(cron = "0 0 8 * * ?")
+    @Scheduled(cron = "0 0 19 * * ?")
     public void sendMpWechatMessage() {
         try {
             WxMpUserList wxMpUserList = wxMpService.getUserService().userList(null);
@@ -339,9 +339,12 @@ public class WechatService {
      */
     private String getWeather(String city) {
         try {
-            String url = "https://www.tianqi.com/chengdu/15/";
+            /*String url = "https://www.tianqi.com/chengdu/15/";
             Document listdocument = Jsoup.connect(url).get();
-            String text = listdocument.select("div.weaone_ba").text();
+            String text = listdocument.select("div.weaone_ba").text();*/
+            String url = "https://weather.com/zh-CN/weather/today/l/15668827c92ba1226b0add3a375f7407fb58588dd8efcb195452e72e1d5302cb";
+            Document listdocument = Jsoup.connect(url).get();
+            String text = listdocument.select("div.CurrentConditions--primary--2DOqs").text();
             return text;
         }catch (Exception e){
             log.error("获取天气失败", e);
